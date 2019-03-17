@@ -7,7 +7,8 @@ import vp_localisation as vp
 import lsdpython.lsd as lsd
 import scipy.ndimage as ndimage
 import scipy.misc
-from skimage import color
+from skimage import color, transform
+from PIL import Image
 
 
 def get_sphere_image(lines, size=250, alpha=0.1, f=1.0):
@@ -118,6 +119,9 @@ def create_data_pickles(dataset, update=False, keepAR=True, cnn_input_size=250, 
 
         print "processing image: ", image_file
 
+        basename = os.path.basename(image_file)
+        tmp_file = os.path.join("/tmp/", basename + ".png")
+
         # basename = os.path.splitext(os.path.basename(image_file))[0]
         # data_file = "%s/%s.data.pkl" % (dataset["destination_folder"], basename)
 
@@ -125,13 +129,37 @@ def create_data_pickles(dataset, update=False, keepAR=True, cnn_input_size=250, 
 
         if (not pkl_exists) or update:
 
-            imageRGB = ndimage.imread(image_file)
+            # imageRGB = ndimage.imread(image_file)
+            # imageRGB = Image.open(image_file)
 
             if target_size is not None:
-                imshape = imageRGB.shape
-                max_dim = np.max(imshape)
-                resize_factor = target_size * 1. / max_dim
-                imageRGB = scipy.misc.imresize(imageRGB, resize_factor, interp='bilinear', mode=None)
+
+                resize_command = "convert %s -resize %dx%d %s" % (image_file, target_size, target_size, tmp_file)
+                os.system(resize_command)
+
+                imageRGB = ndimage.imread(tmp_file)
+
+                # imshape = imageRGB.shape[0:2]
+                # max_dim = np.argmax(imshape).squeeze()
+                # min_dim = np.argmin(imshape).squeeze()
+                # resize_factor = target_size * 1. / np.max(imshape)
+                # newshape = list(imshape)
+                # newshape[max_dim] = target_size
+                # newshape[min_dim] = int(newshape[min_dim] * resize_factor)
+                # # imageRGB = scipy.misc.imresize(imageRGB, resize_factor, interp='bilinear', mode=None)
+                # imageRGB = transform.resize(imageRGB, newshape, order=3, mode='reflect', cval=0, clip=True,
+                #                          preserve_range=False)
+
+                # imageRGB = imageRGB.resize(newshape, Image.ANTIALIAS)
+                # imageRGB =
+
+                # imageRGB = scipy.misc.imresize(imageRGB, resize_factor, interp='bicubic', mode=None)
+                # imageRGB = scipy.misc.imresize(imageRGB, resize_factor, interp='cubic', mode=None)
+                # imageRGB = scipy.misc.imresize(imageRGB, resize_factor, interp='lanczos', mode=None)
+                # imageRGB = scipy.misc.imresize(imageRGB, resize_factor, interp='nearest', mode=None)
+
+            else:
+                imageRGB = ndimage.imread(image_file)
 
             print(imageRGB.shape)
 
