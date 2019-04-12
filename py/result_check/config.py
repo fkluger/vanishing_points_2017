@@ -1,0 +1,10 @@
+caffe_path = "/home/kluger/tmp/tools/caffe-rc5/python"
+cnn_weights_path = "/data/kluger/ma/caffe/vp_sphere_classification/models/alexnet/newdata_500px_20x20_v5/tmp/_iter_300000.caffemodel"
+cnn_mean_path = "/data/kluger/ma/caffe/vp_sphere_classification/models/alexnet/newdata_500px_20x20_v5/mean.binaryproto"
+cnn_config_path = "/data/kluger/ma/caffe/vp_sphere_classification/models/alexnet/newdata_500px_20x20_v5/deploy.prototxt"
+
+ecd_path = "/home/kluger/ma/data/real_world/eurasian/images_vanilla"
+yud_path = "/home/kluger/ma/data/real_world/york/all_orig_images"
+yud_camera_param_path = "/data/kluger/ma/data/real_world/york/cameraParameters.mat"
+hlw_path = ""
+hlw_metadata_path = "/data/kluger/ma/data/real_world/horizon/metadata.csv"
