@@ -7,8 +7,7 @@ import vp_localisation as vp
 import lsdpython.lsd as lsd
 import scipy.ndimage as ndimage
 import scipy.misc
-from skimage import color, transform
-from PIL import Image
+from skimage import color
 import csv
 import pykitti
 
