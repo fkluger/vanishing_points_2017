@@ -51,7 +51,7 @@ dataset = evaluation.get_data_list(data_folder['source_folder'], data_folder['de
                              'default_net', "", "0",
                              distance_measure=em_config['distance_measure'],
                              use_weights=em_config['use_weights'], do_split=em_config['do_split'],
-                             do_merge=em_config['do_merge'], update=update_list)
+                             do_merge=em_config['do_merge'], update=update_list, dataset_name=data_folder["name"])
 
 evaluation.create_data_pickles(dataset, update=update_pickles, cnn_input_size=500,
                                target_size=800 if (args.ecd or args.hlw) else None)
@@ -76,7 +76,7 @@ dataset_name = data_folder["name"]
 print "dataset name: ", dataset['name']
 
 if dataset_name == "york":
-    cameraParams = io.loadmat(config.yud_camera_param_path)
+    cameraParams = io.loadmat(os.path.join(config.yud_path, "cameraParameters.mat"))
 
     f = cameraParams['focal'][0,0]
     ps = cameraParams['pixelSize'][0,0]
@@ -85,11 +85,10 @@ if dataset_name == "york":
     K = np.matrix([[f/ps, 0, 13], [0, f/ps, -11], [0,0,1]])
     S = np.matrix([[2.0/640, 0, 0], [0, 2.0/640, 0], [0, 0, 1]])
     K_inv = np.linalg.inv(K)
-
 metadata = []
 if dataset_name == "horizon":
     import csv
-    with open(config.hlw_metadata_path, 'rb') as csvfile:
+    with open(os.path.join(config.hlw_path, "metadata.csv"), 'rb') as csvfile:
         metadata_file = csv.reader(csvfile)
         for row in metadata_file:
             row[0] = row[0].split('/')[-1]

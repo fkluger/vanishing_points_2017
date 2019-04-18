@@ -9,7 +9,7 @@
 Using other versions of these packages may yield different results.
 
 ### Setup
-Get the code, install requirements and build LSD:
+* Get the code, install requirements and build LSD:
 ```
 git clone https://www.tnt.uni-hannover.de:3000/kluger/Vanishing_Points_GCPR17.git
 cd <folder>
@@ -17,8 +17,29 @@ pip install -r requirements.txt
 cd lsdpython
 python setup.py build_ext --inplace
 ```
+* Download the [CNN weights and image mean files](https://drive.google.com/open?id=1VBBszbCWuVEQ0a7DKVqZNngRsk1Zorei) and 
+put them into the ``cnn`` folder.
+* Adjust ``config.py`` so that it contains the path to your Caffe installation and the paths where you store 
+the [benchmark datasets](#datasets).
 
-
+### Run
+#### Examples
+You can run the vanishing point detector on a four example images (see below) and visualise the results. 
+Computation may take a few moments. Adjust the GPU ID if necessary:
+``` 
+python example.py --gpu 0
+python example.py --show
+```
+#### Benchmarks
+Run the following commands to evaluate the vanishing point detector on the three benchmark datasets and plot the AUC curves:
+```
+python benchmark.py --yud --gpu 0 --update_datalist --update_datafiles --run_cnn --run_em
+python benchmark.py --yud --gpu 0 
+python benchmark.py --ecd --gpu 0 --update_datalist --update_datafiles --run_cnn --run_em
+python benchmark.py --ecd --gpu 0 
+python benchmark.py --hlw --gpu 0 --update_datalist --update_datafiles --run_cnn --run_em
+python benchmark.py --hlw --gpu 0 
+```
 
 ### Examples
 
@@ -45,7 +66,7 @@ If you use the code provided here, please cite:
 ```
 The paper can be found on [arXiv](https://arxiv.org/abs/1707.02427).
 
-The benchmark datasets used in the paper can be found here:
+The benchmark datasets used in the paper can be found here: <a name='datasets'></a>
 * [York Urban Dataset](http://www.elderlab.yorku.ca/resources/york-urban-line-segment-database-information/)
 * [Eurasian Cities Dataset](http://graphics.cs.msu.ru/en/research/projects/msr/geometry)
 * [Horizon Lines in the Wild](http://www.cs.uky.edu/~jacobs/datasets/hlw/)
