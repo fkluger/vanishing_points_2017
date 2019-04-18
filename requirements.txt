@@ -1,3 +1,4 @@
+python==2.7
 cycler==0.10.0
 Cython==0.29
 easydict==1.8
