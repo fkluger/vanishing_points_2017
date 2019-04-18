@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def indexToAngle(index, shape):
+def index_to_angle(index, shape):
 
     angle = np.zeros(2)
 
@@ -20,8 +20,7 @@ def indexToAngle(index, shape):
     return angle
 
 
-def angleToIndex(angle, shape):
-
+def angle_to_index(angle, shape):
     alpha = angle[0]
     beta = angle[1]
 
@@ -36,7 +35,7 @@ def angleToIndex(angle, shape):
     return index
 
 
-def angleToPoint(angle):
+def angle_to_point(angle):
     alpha = angle[0]
     beta = angle[1]
 
@@ -51,8 +50,7 @@ def angleToPoint(angle):
     return point
 
 
-def pointToAngle(point):
-
+def point_to_angle(point):
     angle = np.zeros(2)
     angle[1] = np.arcsin(point[1])
     inner = point[0] / np.cos(angle[1])

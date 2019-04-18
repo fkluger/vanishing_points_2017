@@ -1,0 +1,3 @@
+[submodule "lsdpython"]
+	path = lsdpython
+	url = https://github.com/xanxys/lsd-python.git

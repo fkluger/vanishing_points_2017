@@ -2,43 +2,46 @@ import config
 import sys
 sys.path.insert(0,config.caffe_path)
 import evaluation
-import numpy as np
 import scipy.io as io
 import os
 import pickle
 import scipy.ndimage as ndimage
 import probability_functions as prob
-import sklearn.metrics
 import calc_horizon as ch
 import time
 import matplotlib.pyplot as plt
 import argparse
+from auc import *
 
 parser = argparse.ArgumentParser(description='')
-parser.add_argument('--yud', dest='yud', action='store_true', help='')
-parser.add_argument('--ecd', dest='ecd', action='store_true', help='')
-parser.add_argument('--hlw', dest='hlw', action='store_true', help='')
-parser.add_argument('--result_folder', default='/tmp/', type=str, help='')
+parser.add_argument('--yud', dest='yud', action='store_true', help='Run benchmark on YUD')
+parser.add_argument('--ecd', dest='ecd', action='store_true', help='Run benchmark on ECD')
+parser.add_argument('--hlw', dest='hlw', action='store_true', help='Run benchmark on HLW')
+parser.add_argument('--result_dir', default='/tmp/', type=str, help='Directory to store (intermediate) results')
+parser.add_argument('--gpu', default=0, type=int, help='GPU ID to use')
+parser.add_argument('--update_datalist', dest='update_datalist', action='store_true', help='Update the dataset list')
+parser.add_argument('--update_datafiles', dest='update_datafiles', action='store_true', help='Update the dataset files')
+parser.add_argument('--run_cnn', dest='run_cnn', action='store_true', help='Evaluate CNN on the data')
+parser.add_argument('--run_em', dest='run_em', action='store_true', help='Run EM refinement on the data')
 args = parser.parse_args()
 
-update_list = False
-update_pickles = False
-update_cnn = True
-update_em = True
+update_list = args.update_datalist
+update_pickles = args.update_datafiles
+update_cnn = args.run_cnn
+update_em = args.run_em
 
-GPU_ID = 3
+GPU_ID = args.gpu
 
-# model_root = "/data/kluger/ma/caffe/vp_sphere_classification/models/alexnet/newdata_500px_20x20_v5"
 image_mean = config.cnn_mean_path
-model_def = config.cnn_config_path #model_root + "/deploy.prototxt"
+model_def = config.cnn_config_path
 model_weights = config.cnn_weights_path
 
 if args.yud:
     data_folder = {"name": "york", "source_folder": config.yud_path,
-                   "destination_folder": os.path.join(args.result_folder, "york")}
+                   "destination_folder": os.path.join(args.result_dir, "york")}
 elif args.ecd:
     data_folder = {"name": "eurasian", "source_folder": config.ecd_path,
-                   "destination_folder": os.path.join(args.result_folder, "eurasian")}
+                   "destination_folder": os.path.join(args.result_dir, "eurasian")}
 else:
     assert False
 
@@ -62,13 +65,11 @@ if update_em:
 
 start = 25 if (args.yud or args.ecd) else 0
 end = 10000
-maxbest = 20
 
 err_cutoff = 0.25
 
-minVPdist = np.pi/10 #np.pi*0.1
-
-graph_color = 'g'
+theta_vmin = np.pi / 10
+N_vp = 20
 
 dataset_name = data_folder["name"]
 
@@ -96,36 +97,16 @@ if dataset_name == "horizon":
             metadata.append(row)
 
 errors = []
-angle_errors = []
-z_angle_errors = []
-
-f_errors = []
-
-false_pos = []
-false_neg = []
-true_pos = []
-
-false_pos3 = []
-false_neg3 = []
-true_pos3 = []
-
-recalls = []
-
-count = 0
 
 indices = range(len(dataset['image_files']))
 
 start_time = time.time()
 
+count = 0
 for idx in indices:
-
 
     image_file = dataset['image_files'][idx]
     data_file = dataset['pickle_files'][idx]
-
-    # image_file = image_file.replace("scaled", "vanilla")
-    # if dataset_name == "eurasian":
-    #     image_file = image_file.replace("png", "jpg")
 
     count += 1
 
@@ -144,7 +125,6 @@ for idx in indices:
 
     basename = os.path.splitext(image_file)[0]
 
-    print "data file: ", data_file
     if not os.path.isfile(data_file):
         print "file not found"
         continue
@@ -246,74 +226,46 @@ for idx in indices:
     lines_dict = datum['lines'] if 'lines' in datum else None
     em_result = datum['EM_result'] if 'EM_result' in datum else None
 
-    if not (em_result is None):
+    assert not (em_result is None), "no EM result!"
 
-        ( hP1, hP2, zVP, hVP1, hVP2, best_combo ) = ch.calculate_horizon_and_ortho_vp(em_result, maxbest=maxbest, minVPdist=minVPdist)
+    (hP1, hP2, zVP, hVP1, hVP2, best_combo) = ch.calculate_horizon_and_ortho_vp(em_result, maxbest=N_vp,
+                                                                                theta_vmin=theta_vmin)
 
-        vps = em_result['vp']
-        counts = em_result['counts']
-        vp_assoc = em_result['vp_assoc']
-        angles = prob.calc_angles(vps.shape[0], vps)
-        ls = lines_dict['line_segments']
-        ll = lines_dict['lines']
+    vps = em_result['vp']
+    counts = em_result['counts']
+    vp_assoc = em_result['vp_assoc']
+    angles = prob.calc_angles(vps.shape[0], vps)
+    ls = lines_dict['line_segments']
+    ll = lines_dict['lines']
 
-        num_best = np.minimum(maxbest, vps.shape[0])
+    num_best = np.minimum(N_vp, vps.shape[0])
 
-        horizon_line = np.cross(hP1, hP2)
+    horizon_line = np.cross(hP1, hP2)
 
-        if not (trueHorizon is None):
-            thP1 = np.cross(trueHorizon, np.array([1, 0, 1]))
-            thP2 = np.cross(trueHorizon, np.array([-1, 0, 1]))
-            thP1 /= thP1[2]
-            thP2 /= thP2[2]
+    if not (trueHorizon is None):
+        thP1 = np.cross(trueHorizon, np.array([1, 0, 1]))
+        thP2 = np.cross(trueHorizon, np.array([-1, 0, 1]))
+        thP1 /= thP1[2]
+        thP2 /= thP2[2]
 
-            max_error = np.maximum(np.abs(hP1[1]-thP1[1]), np.abs(hP2[1]-thP2[1]))/2 * scale*1.0/imageHeight
+        max_error = np.maximum(np.abs(hP1[1]-thP1[1]), np.abs(hP2[1]-thP2[1]))/2 * scale*1.0/imageHeight
 
-            print "max_error: ", max_error
+        print "max_error: ", max_error
 
-            errors.append(max_error)
-
-        langles = np.zeros(ll.shape[0])
-        lcosphi = np.zeros(ll.shape[0])
-        llen = np.zeros(ll.shape[0])
-
-    else:
-        print "no EM results!"
+        errors.append(max_error)
 
 end_time = time.time()
 
 print "time elapsed: ", end_time-start_time
 
 error_arr = np.array(errors)
-error_arr_idx = np.argsort(error_arr)
-error_arr = np.sort(error_arr)
+auc, plot_points = calc_auc(error_arr, cutoff=err_cutoff)
 
-num_values = len(errors)
-
-plot_points = np.zeros((num_values,2))
-
-midfraction = 1.
-for i in range(num_values):
-    fraction = (i+1) * 1.0/num_values
-    value = error_arr[i]
-    plot_points[i,1] = fraction
-    plot_points[i,0] = value
-    if i > 0:
-        lastvalue = error_arr[i-1]
-        if lastvalue < err_cutoff and value > err_cutoff:
-            midfraction = (lastvalue*plot_points[i-1,1] + value*fraction) / (value+lastvalue)
-
-if plot_points[-1,0] < err_cutoff:
-    plot_points = np.vstack([plot_points, np.array([err_cutoff,1])])
-else:
-    plot_points = np.vstack([plot_points, np.array([err_cutoff,midfraction])])
-
-auc = sklearn.metrics.auc(plot_points[plot_points[:,0]<=err_cutoff,0], plot_points[plot_points[:,0]<=err_cutoff,1])
-print "auc: ", auc / err_cutoff
+print "AUC: ", auc
 
 plt.figure()
 ax = plt.subplot()
-ax.plot(plot_points[:,0], plot_points[:,1], '-', lw=2, c=graph_color)
+ax.plot(plot_points[:,0], plot_points[:,1], '-', lw=2, c='b')
 ax.set_xlabel('horizon error', fontsize=18)
 ax.set_ylabel('fraction of images', fontsize=18)
 

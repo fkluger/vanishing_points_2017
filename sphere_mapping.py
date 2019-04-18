@@ -4,33 +4,22 @@ import Image
 from pylab import *
 import matplotlib.pyplot as plt
 
-def fig2img ( fig ):
-    """
-    @brief Convert a Matplotlib figure to a PIL Image in RGBA format and return it
-    @param fig a matplotlib figure
-    @return a Python Imaging Library ( PIL ) image
-    """
-    # put the figure pixmap into a numpy array
-    buf = fig2data ( fig )
-    w, h, d = buf.shape
 
-    im = Image.fromstring( "RGBA", ( w ,h ), buf.tostring( ) )
+def fig2img(fig):
+    buf = fig2data(fig)
+    w, h, d = buf.shape
+    im = Image.fromstring("RGBA", (w, h), buf.tostring())
     return im
 
-def fig2imgarr ( fig ):
-    im = fig2img(fig)
 
+def fig2imgarr(fig):
+    im = fig2img(fig)
     imarr = np.asarray(im)
     imarr = np.delete(imarr, 3, 2)
-
     return imarr
 
+
 def fig2data(fig):
-    """
-    @brief Convert a Matplotlib figure to a 4D numpy array with RGBA channels and return it
-    @param fig a matplotlib figure
-    @return a numpy 3D array of RGBA values
-    """
     # draw the renderer
     fig.canvas.draw()
 
@@ -43,7 +32,8 @@ def fig2data(fig):
     buf = np.roll(buf, 3, axis=2)
     return buf
 
-def sphereLinePlot(lines, size, alpha=0.1, f=1.0, alternative=False):
+
+def sphere_line_plot(lines, size, alpha=0.1, f=1.0, alternative=False):
 
     plt.ioff()	
 
@@ -57,7 +47,7 @@ def sphereLinePlot(lines, size, alpha=0.1, f=1.0, alternative=False):
     fig.add_axes(ax)
 
     ax.set_axis_bgcolor((0, 0, 0))
-    # ax.set_facecolor((0, 0, 0))
+
     ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
 
@@ -82,19 +72,14 @@ def sphereLinePlot(lines, size, alpha=0.1, f=1.0, alternative=False):
     return imgray
 
 
-def sphereLinePlotImage(lines, size, alpha=0.5, f=1.0, alternative=False):
-
-    imgray = sphereLinePlot(lines, size, alpha, f, alternative)
-
+def sphere_line_plot_image(lines, size, alpha=0.5, f=1.0, alternative=False):
+    imgray = sphere_line_plot(lines, size, alpha, f, alternative)
     ims = Image.fromarray(imgray, 'L')
-
     return ims
 
 
-def plotSphereLinesToFile(lines, imSize, filename, alpha=0.5, f=1.0, alternative=False):
-
-    imsr = sphereLinePlotImage(lines, imSize, alpha, f, alternative)
-
+def plot_sphere_lines_to_tile(lines, im_size, filename, alpha=0.5, f=1.0, alternative=False):
+    imsr = sphere_line_plot_image(lines, im_size, alpha, f, alternative)
     imsr.save(filename)
 
 

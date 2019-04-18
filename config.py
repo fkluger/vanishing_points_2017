@@ -3,8 +3,8 @@ cnn_weights_path = "/data/kluger/ma/caffe/vp_sphere_classification/models/alexne
 cnn_mean_path = "/data/kluger/ma/caffe/vp_sphere_classification/models/alexnet/newdata_500px_20x20_v5/mean.binaryproto"
 cnn_config_path = "/data/kluger/ma/caffe/vp_sphere_classification/models/alexnet/newdata_500px_20x20_v5/deploy.prototxt"
 
-ecd_path = "/home/kluger/ma/data/real_world/eurasian/images_vanilla"
-yud_path = "/home/kluger/ma/data/real_world/york/all_orig_images"
+ecd_path = "/data/scene_understanding/ECD/vanilla"
+yud_path = "/data/scene_understanding/HLW"
 yud_camera_param_path = "/data/kluger/ma/data/real_world/york/cameraParameters.mat"
-hlw_path = ""
+hlw_path = "/data/scene_understanding/HLW"
 hlw_metadata_path = "/data/kluger/ma/data/real_world/horizon/metadata.csv"
