@@ -1,6 +1,6 @@
 import matplotlib
 matplotlib.use('Agg')
-import Image
+from PIL import Image
 from pylab import *
 import matplotlib.pyplot as plt
 
