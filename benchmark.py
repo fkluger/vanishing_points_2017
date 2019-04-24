@@ -42,6 +42,9 @@ if args.yud:
 elif args.ecd:
     data_folder = {"name": "eurasian", "source_folder": config.ecd_path,
                    "destination_folder": os.path.join(args.result_dir, "eurasian")}
+elif args.hlw:
+    data_folder = {"name": "horizon", "source_folder": config.hlw_path,
+                   "destination_folder": os.path.join(args.result_dir, "horizon")}
 else:
     assert False
 
