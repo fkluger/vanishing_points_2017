@@ -12,3 +12,4 @@ protobuf==3.6.1
 scikit-image==0.12.3
 scikit-learn==0.18
 scipy==1.1.0
+boost

@@ -83,7 +83,7 @@ def get_data_list(source_folder, destination_folder, name, cnn_model_root, cnn_m
             image_files = glob.glob("%s/P*/P*.jpg" % source_folder)
         elif dataset_name == 'eurasian':
             image_files = glob.glob("%s/*.jpg" % source_folder)
-        elif dataset_name == 'hlw':
+        elif dataset_name == 'horizon':
             image_list_file = "%s/split/test.txt" % source_folder
             image_files = []
             with open(image_list_file) as fp:
