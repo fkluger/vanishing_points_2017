@@ -1,10 +1,10 @@
 ## Deep Learning for Vanishing Point Detection Using an Inverse Gnomonic Projection
 
 ### Requirements
-* Python 2.7
+* Anaconda w/ Python 2.7
 * [Caffe 1.0-RC5](https://github.com/BVLC/caffe/tree/rc5)
 * ImageMagick 6.8.8-1
-* what the ``requirements.txt`` says
+* what the ``spec-file.txt`` says
 
 Using other versions of these packages may yield different results.
 
@@ -12,10 +12,12 @@ Using other versions of these packages may yield different results.
 * Get the code, install requirements and build LSD:
 ```
 git clone https://www.tnt.uni-hannover.de:3000/kluger/Vanishing_Points_GCPR17.git
-cd <folder>
-pip install -r requirements.txt
+cd Vanishing_Points_GCPR17
+conda create --name gcpr17_vp_detection --file spec-file.txt
+source activate gcpr17_vp_detection
 cd lsdpython
 python setup.py build_ext --inplace
+cd ..
 ```
 * Download the [CNN weights and image mean files](https://drive.google.com/open?id=1VBBszbCWuVEQ0a7DKVqZNngRsk1Zorei) and 
 put them into the ``cnn`` folder.
