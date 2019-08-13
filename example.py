@@ -1,6 +1,6 @@
 import config
 import sys
-sys.path.insert(0,"/home/kluger/tmp/tools/caffe-rc5/python")
+sys.path.insert(0,config.caffe_path)
 import os
 import argparse
 import pickle

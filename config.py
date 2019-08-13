@@ -1,4 +1,4 @@
-caffe_path = "/home/kluger/tmp/tools/caffe-rc5-recompile/python"
+caffe_path = "/home/kluger/tmp/tools/caffe-rc5/python"
 
 ecd_path = "/data/scene_understanding/ECD"
 yud_path = "/data/scene_understanding/YUD"
