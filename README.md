@@ -4,7 +4,7 @@
 * Anaconda w/ Python 2.7
 * [Caffe 1.0-RC5](https://github.com/BVLC/caffe/tree/rc5)
 * ImageMagick 6.8.8-1
-* what the ``spec-file.txt`` says
+* what ``spec-file.txt`` and ``requirements.txt`` say
 
 Using other versions of these packages may yield different results.
 
