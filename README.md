@@ -27,7 +27,7 @@ the [benchmark datasets](#datasets).
 
 ### Run
 #### Examples
-You can run the vanishing point detector on a four example images (see below) and visualise the results. 
+You can run the vanishing point detector on four example images (see below) and visualise the results. 
 Computation may take a few moments. Adjust the GPU ID if necessary:
 ``` 
 python example.py --gpu 0
