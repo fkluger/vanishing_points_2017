@@ -11,7 +11,7 @@ Using other versions of these packages may yield different results.
 ### Setup
 * Get the code, install requirements and build LSD:
 ```
-git clone --recursive https://www.tnt.uni-hannover.de:3000/kluger/Vanishing_Points_GCPR17.git
+git clone --recursive https://github.com/fkluger/Vanishing_Points_GCPR17.git
 cd Vanishing_Points_GCPR17
 conda create --name gcpr17_vp_detection --file spec-file.txt
 source activate gcpr17_vp_detection
