@@ -71,7 +71,6 @@ https://repo.continuum.io/pkgs/free/linux-64/colorama-0.3.7-py27_0.tar.bz2
 https://repo.continuum.io/pkgs/free/linux-64/contextlib2-0.5.3-py27_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/linux-64/curl-7.63.0-hbc83047_1000.tar.bz2
 https://repo.continuum.io/pkgs/free/linux-64/cvxopt-1.1.8-py27_3.tar.bz2
-https://repo.continuum.io/pkgs/free/linux-64/cython-0.24.1-py27_0.tar.bz2
 https://repo.continuum.io/pkgs/free/linux-64/decorator-4.0.10-py27_0.tar.bz2
 https://repo.continuum.io/pkgs/free/linux-64/dill-0.2.5-py27_0.tar.bz2
 https://repo.continuum.io/pkgs/free/linux-64/docutils-0.12-py27_2.tar.bz2
