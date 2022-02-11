@@ -6,7 +6,7 @@ joblib==0.9.4
 lmdb==0.92
 matplotlib==1.5.1
 Pillow==2.9.0
-protobuf==3.6.1
+protobuf==3.15.0
 scikit-image==0.12.3
 scikit-learn==0.18
 scipy==1.1.0
