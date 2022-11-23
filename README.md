@@ -20,7 +20,7 @@ cd lsdpython
 python setup.py build_ext --inplace
 cd ..
 ```
-* Download the [CNN weights and image mean files](https://drive.google.com/open?id=1VBBszbCWuVEQ0a7DKVqZNngRsk1Zorei) and 
+* Download the [CNN weights and image mean files](https://cloud.tnt.uni-hannover.de/index.php/s/PsAzqETFa6SbpER) and 
 put them into the ``cnn`` folder.
 * Adjust ``config.py`` so that it contains the path to your Caffe installation and the paths where you store 
 the [benchmark datasets](#datasets).
