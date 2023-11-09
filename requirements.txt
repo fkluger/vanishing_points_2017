@@ -2,7 +2,7 @@ cycler==0.10.0
 Cython==0.29
 easydict==1.8
 h5py==2.8.0
-joblib==0.9.4
+joblib==1.2.0
 lmdb==0.92
 matplotlib==1.5.1
 Pillow==2.9.0
